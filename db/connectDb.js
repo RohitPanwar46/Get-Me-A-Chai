@@ -9,7 +9,7 @@ const connectDB = async () => {
     }
 
     try {
-        const conn = await mongoose.connect(`mongodb://localhost:27017/chai`, {
+        const conn = await mongoose.connect(`procces.env.MONGODB_URI`, {
             serverSelectionTimeoutMS: 30000, // Increase server selection timeout to 30 seconds
         });
 
