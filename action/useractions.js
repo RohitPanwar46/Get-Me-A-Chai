@@ -24,13 +24,21 @@ export const intiate = async (amount, to_username, paymentform) => {
     return x;
 }
 
-export const fetchuser = async (username) => {
+export const fetchuser = async (username,email) => {
     await connectDB();
+
+    // Try finding the user in the database
     let u = await User.findOne({ username: username });
-    if (!u) return null; // Handle case where user is not found
-    let user = u.toObject(); // Convert to plain object
+
+    // If the user doesn't exist, create a new one and save it
+    if (!u) {
+        u = await User.create({ username: username,email:email });
+    }
+
+    // Convert the user document to a plain object
+    let user = u.toObject();
     user._id = user._id.toString(); // Convert ObjectId to string
-    return user;
+    return user; // Return the user data
 };
 
 
@@ -49,18 +57,22 @@ export const fetchpayments = async (username) => {
 
 export const updateprofile = async (data, oldusername) => {
     await connectDB();
-    console.log(await  data)
-    let ndata = Object.fromEntries(data);
+    console.log(data);
 
-    // if the username is bieng updated, check if the username is available 
+    // Ensure data is an object
+    const ndata = { ...data };
+
+    // If the username is being updated, check if the new username is available
     if (ndata.username !== oldusername) {
-        let u = await User.findOne({ username: ndata.username });
-        if(u){
-            return {error: "Username already exists"};
+        const existingUser = await User.findOne({ username: ndata.username });
+        if (existingUser) {
+            return { error: "Username already exists" };
         }
     }
 
-    await User.updateOne({email: ndata.email},ndata)
+    // Update the user profile based on the email
+    await User.updateOne({ email: ndata.email }, ndata);
+    return { success: true }; // Indicate successful update
 };
 
 export const fetchTotalPayments = async (username) => {

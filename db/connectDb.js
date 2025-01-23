@@ -1,16 +1,26 @@
 import mongoose from 'mongoose';
 
-let isConnected = false; // Track the connection state
+let isConnected = false; // Global variable to track connection status
 
 const connectDB = async () => {
     if (isConnected) {
-        console.log("Already connected to MongoDB.");
+        console.log("Using existing MongoDB connection.");
         return;
     }
 
     try {
-        const conn = await mongoose.connect(`process.env.MONGODB_URI`, {
-            serverSelectionTimeoutMS: 30000, // Increase server selection timeout to 30 seconds
+        if (mongoose.connection.readyState === 1) {
+            // If there's already an open connection, use it
+            console.log("Reusing existing MongoDB connection.");
+            isConnected = true;
+            return;
+        }
+
+        // Otherwise, create a new connection
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 30000, // 30 seconds timeout
         });
 
         isConnected = true;

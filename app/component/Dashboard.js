@@ -1,9 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { fetchuser, updateprofile } from "@/action/useractions";
 import { ToastContainer, Bounce, toast } from "react-toastify";
+import Link from "next/link";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -29,25 +29,39 @@ const Dashboard = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const getData = async () => {
-    let u = await fetchuser(session.user.name);
-    setForm(u);
+  const saveProfile = async () => {
+    const response = await updateprofile(form, session.user.name);
+    if (response && response.error) {
+      toast.error(response.error, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+        transition: Bounce,
+      });
+    } else {
+      toast.success("Profile updated!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let a = await updateprofile(form, session.user.name);
-    toast("Profile updated!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+  const getData = async () => {
+    let u = await fetchuser(session.user.name);
+    setForm((prevForm) => ({
+      ...prevForm,
+      ...u, // Update the form state with fetched user data
+    }));
   };
 
   return (
@@ -71,7 +85,7 @@ const Dashboard = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit}
+        action={saveProfile} // Using the saveProfile function as the form action
         className="w-full max-w-lg mx-auto flex flex-col items-center gap-4 mt-6"
       >
         {[
@@ -91,7 +105,7 @@ const Dashboard = () => {
               {label}
             </label>
             <input
-              value={form[name]}
+              value={form[name] || ""} // Provide a default value to avoid "undefined"
               onChange={handleChange}
               className="h-[36px] bg-gray-700 text-white rounded-lg px-3 text-sm md:text-base"
               type={type}
@@ -101,12 +115,13 @@ const Dashboard = () => {
           </div>
         ))}
 
-        <button
+        <Link
+          href={`/${session.user.name}`}>
+          <button
           className="w-full bg-sky-800 text-white rounded-lg h-[40px] mt-4 font-semibold text-sm md:text-base hover:bg-sky-700"
-          type="submit"
-        >
+          type="submit">
           Save
-        </button>
+        </button></Link>
       </form>
     </div>
   );
