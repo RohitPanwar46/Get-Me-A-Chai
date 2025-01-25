@@ -132,7 +132,7 @@ const PaymentPage = ({ username }) => {
       <div className="flex flex-col md:flex-row justify-center gap-6 mx-auto w-[90%] mb-10 text-slate-200">
         {/* Supporters Section */}
         <div className="Supporters bg-slate-900 w-full md:w-1/2 rounded-lg min-h-96 overflow-y-hidden p-6">
-          <h1 className="font-bold text-2xl">Top 10 Supporters</h1>
+          <h1 className="font-bold text-2xl">Top 6 Supporters</h1>
           {payments.length === 0 && (
             <div className="ml-3 py-3 font-semibold">No Payments Yet</div>
           )}
