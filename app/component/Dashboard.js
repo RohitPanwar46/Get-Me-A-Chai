@@ -18,11 +18,13 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
+    console.log("Current status:", status);
     if (status === "authenticated") {
       getData();
     } else if (status === "unauthenticated") {
       console.error("User is not authenticated.");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const handleChange = (e) => {
@@ -57,12 +59,13 @@ const Dashboard = () => {
   };
 
   const getData = async () => {
-    let u = await fetchuser(session.user.name);
-    setForm((prevForm) => ({
-      ...prevForm,
-      ...u, // Update the form state with fetched user data
-    }));
-  };
+    if (status === "authenticated" && session.user) {
+        console.log(form.email)
+        let u = await fetchuser(session.user.name, form.email); // Pass both username and email
+        console.log(u)
+        setForm(u);
+    }
+};
 
   return (
     <div className="p-4 sm:p-6 md:p-8">
@@ -115,13 +118,12 @@ const Dashboard = () => {
           </div>
         ))}
 
-        <Link
-          href={`/${session.user.name}`}>
+        
           <button
-          className="w-full bg-sky-800 text-white rounded-lg h-[40px] mt-4 font-semibold text-sm md:text-base hover:bg-sky-700"
+          className="w-full bg-sky-800 text-white rounded-lg h-[35px] mt-4 font-semibold text-sm md:text-base hover:bg-sky-700"
           type="submit">
           Save
-        </button></Link>
+        </button>
       </form>
     </div>
   );

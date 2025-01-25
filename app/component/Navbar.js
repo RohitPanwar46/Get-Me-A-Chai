@@ -29,7 +29,7 @@ const Navbar = () => {
             Your page
           </button>
           </Link>
-          <Link href={"/Dashboard"} className=" md:mt-0">
+          <Link href={"/dashboard"} className=" md:mt-0">
           <button
             type="button"
             className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 md:font-medium rounded-lg text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5"

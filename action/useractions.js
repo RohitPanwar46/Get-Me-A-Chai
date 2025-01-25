@@ -26,7 +26,7 @@ export const intiate = async (amount, to_username, paymentform) => {
 
 export const fetchuser = async (username,email) => {
     await connectDB();
-
+    
     // Try finding the user in the database
     let u = await User.findOne({ username: username });
 
