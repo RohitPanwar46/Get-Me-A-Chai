@@ -44,7 +44,7 @@ export const POST = async (req) => {
         }
 
         return NextResponse.redirect(
-                `http://localhost:3000/${updatedPayment?.to_user}?paymentdone=true`
+                `https://get-me-a-chai-rho.vercel.app/${updatedPayment?.to_user}?paymentdone=true`
         );
     } catch (error) {
         console.error("Error:", error.message);
