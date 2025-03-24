@@ -32,13 +32,18 @@ export const fetchuser = async (username,email) => {
 
     // If the user doesn't exist, create a new one and save it
     if (!u) {
-        u = await User.create({ username: username,email:email });
+        //u = await User.create({ username: username,email:email });
+        let user = "undefined"
+        return user;
+    }
+    else{
+        // Convert the user document to a plain object
+        let user = u.toObject();
+        user._id = user._id.toString(); // Convert ObjectId to string
+        return user; // Return the user data
+
     }
 
-    // Convert the user document to a plain object
-    let user = u.toObject();
-    user._id = user._id.toString(); // Convert ObjectId to string
-    return user; // Return the user data
 };
 
 

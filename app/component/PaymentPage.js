@@ -10,9 +10,11 @@ import { useRouter } from "next/navigation";
 
 const PaymentPage = ({ username }) => {
   const [paymentform, setPaymentform] = useState({ name: "", message: "", amount: 0 });
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState("Rohit");
   const [payments, setPayments] = useState([]);
   const [totalPayments, setTotalPayments] = useState([]);
+  const [loading, setLoading] = useState("Loading...")
+
   const SearchParams = useSearchParams();
   const router = useRouter();
 
@@ -20,6 +22,10 @@ const PaymentPage = ({ username }) => {
     getData();
     document.title = `${username} - Get Me A Chai`;
   }, []);
+
+setTimeout(() => {
+  setLoading("User not found if your speling is correct check your internet connection ")
+}, 10000);
 
   useEffect(() => {
     if (SearchParams.get("paymentdone") === "true") {
@@ -92,6 +98,9 @@ const PaymentPage = ({ username }) => {
     }
   };
 
+  if(currentUser === "Rohit" || currentUser === "undefined"){ 
+    return( <div className="text-3xl">{loading}</div> )
+  }else{
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
@@ -108,7 +117,7 @@ const PaymentPage = ({ username }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+        />
 
       <div className="w-full">
         <div className="relative">
@@ -215,6 +224,6 @@ const PaymentPage = ({ username }) => {
       </div>
     </>
   );
-};
+}};
 
 export default PaymentPage;
